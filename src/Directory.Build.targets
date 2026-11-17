@@ -1,0 +1,28 @@
+<Project>
+  <!--
+    MinVer has no setting for a baseline version, so without a version tag it
+    calculates 0.0.0-alpha.0.{height}. Until a version tag exists, replace that
+    with $(VersionBaseline).{height + $(VersionBaselineHeightOffset)}, which
+    continues the previews already published from the spectre.console repository.
+    Once a commit has a version tag, MinVer's version is used unchanged.
+  -->
+  <Target Name="ApplyVersionBaseline"
+          AfterTargets="MinVer"
+          Condition="'$(VersionBaseline)' != '' and '$(MinVerVersion.StartsWith(`0.0.0-alpha.0.`))' == 'true'">
+    <PropertyGroup>
+      <_VersionBaselineHeight>$([MSBuild]::Add($(MinVerPreRelease.Split(`.`)[2]), $(VersionBaselineHeightOffset)))</_VersionBaselineHeight>
+      <MinVerVersion>$(VersionBaseline).$(_VersionBaselineHeight)</MinVerVersion>
+      <MinVerVersion Condition="'$(MinVerBuildMetadata)' != ''">$(MinVerVersion)+$(MinVerBuildMetadata)</MinVerVersion>
+      <MinVerMajor>$(VersionBaseline.Split(`.`)[0])</MinVerMajor>
+      <MinVerMinor>$(VersionBaseline.Split(`.`)[1])</MinVerMinor>
+      <MinVerPatch>$(VersionBaseline.Split(`.`)[2].Split(`-`)[0])</MinVerPatch>
+      <MinVerPreRelease>$(VersionBaseline.Split(`-`, 2)[1]).$(_VersionBaselineHeight)</MinVerPreRelease>
+      <AssemblyVersion>$(MinVerMajor).0.0.0</AssemblyVersion>
+      <FileVersion>$(MinVerMajor).$(MinVerMinor).$(MinVerPatch).0</FileVersion>
+      <InformationalVersion>$(MinVerVersion)</InformationalVersion>
+      <PackageVersion>$(MinVerMajor).$(MinVerMinor).$(MinVerPatch)-$(MinVerPreRelease)</PackageVersion>
+      <Version>$(PackageVersion)</Version>
+    </PropertyGroup>
+    <Message Importance="normal" Text="Version baseline applied: $(PackageVersion)" />
+  </Target>
+</Project>

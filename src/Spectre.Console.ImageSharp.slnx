@@ -1,0 +1,18 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+  </Configurations>
+  <Folder Name="/Build/">
+    <File Path="../dotnet-tools.json" />
+    <File Path="../global.json" />
+    <File Path="../build.cs" />
+    <File Path=".editorconfig" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
+  </Folder>
+  <Folder Name="/Build/GitHub/">
+    <File Path="../.github/workflows/ci.yaml" />
+    <File Path="../.github/workflows/publish.yaml" />
+  </Folder>
+  <Project Path="Spectre.Console.ImageSharp/Spectre.Console.ImageSharp.csproj" />
+</Solution>
